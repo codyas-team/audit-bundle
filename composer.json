@@ -1,0 +1,35 @@
+{
+  "name": "codyas/audit-bundle",
+  "description": "Keep a changelog of Doctrine entities using Serializer component",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yasel Romero",
+      "email": "yasel@codyas.com"
+    },
+    {
+      "name": "Leonardo D. Antunez",
+      "email": "antunez@codyas.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=8.1.0",
+    "ext-zlib": "*",
+    "symfony/orm-pack": "^1.0 || 2.0",
+    "symfony/framework-bundle": "^5.0 || ^6.0",
+    "knplabs/knp-paginator-bundle": "^5.0",
+    "symfony/flex": "^1.0 || ^2.0",
+    "symfony/serializer": "^5.0 || ^6.0",
+    "swaggest/json-diff": "^3.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Codyas\\Toolbox\\": "src"
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Codyas\Audit\Service\AuditService: ~
+    Codyas\Audit\Repository\AuditLogRepository: ~
+    Codyas\Audit\EventSubscriber\AuditSubscriber:
+        tags:
+            - name: 'doctrine.event_subscriber'
+              priority: 500
+              connection: 'default'
