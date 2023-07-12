@@ -67,9 +67,17 @@ Register the Doctrine compressed data type
 
 ```yaml
 doctrine:
-    dbal:
-        types:
-            compressed_json: Codyas\Audit\Doctrine\DBAL\Types\CompressedJsonType
+  dbal:
+    types:
+      compressed_json: Codyas\Audit\Doctrine\DBAL\Types\CompressedJsonType
+  
+  ## ... Adjust the ORM mapping section to your needs
+  orm:
+    entity_managers:
+      default:
+        mappings:
+          AuditBundle:
+            is_bundle: true
 ```
 
 Concepts

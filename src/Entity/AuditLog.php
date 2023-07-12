@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AuditLogRepository::class)]
 #[ORM\Table(name: "cd_audits_logs")]
-final class AuditLog
+class AuditLog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
