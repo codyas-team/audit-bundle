@@ -97,7 +97,7 @@ class AuditSubscriber implements EventSubscriberInterface
                     continue;
                 }
                 $itemClass = $item->getMasterNamespace();
-                if ($action === Constants::AUDIT_ACTION_DELETE) {
+                if (in_array($action, [Constants::AUDIT_ACTION_DELETE, Constants::AUDIT_ACTION_INSERT])) {
                     $action = Constants::AUDIT_ACTION_UPDATE;
                 }
             }
