@@ -90,10 +90,11 @@ class AuditSubscriber implements EventSubscriberInterface
     {
         foreach ($iterableSource as $item) {
             $auditableItem = $item;
+            $this->em->refresh($auditableItem);
             $itemClass = get_class($auditableItem);
             if ($item instanceof SlaveAuditableInterface) {
                 $auditableItem = $item->getMaster();
-                if (!$auditableItem->getId()) {
+                if (!$auditableItem?->getId()) {
                     continue;
                 }
                 $itemClass = $item->getMasterNamespace();
@@ -101,7 +102,7 @@ class AuditSubscriber implements EventSubscriberInterface
                     $action = Constants::AUDIT_ACTION_UPDATE;
                 }
             }
-            $itemKey = "{$itemClass}:{$auditableItem->getId()}";
+            $itemKey = "{$itemClass}:{$auditableItem?->getId()}";
             if (in_array($itemKey, $this->enqueuedItems)) {
                 continue;
             }
@@ -131,7 +132,9 @@ class AuditSubscriber implements EventSubscriberInterface
         $inserts = $unitOfWork->getScheduledEntityInsertions();
         $updates = $unitOfWork->getScheduledEntityUpdates();
         foreach ($inserts as $item) {
-            if ($item instanceof AuditableInterface) {
+            if ($item instanceof MasterAuditableInterface) {
+                array_unshift($this->entityInsertBuffer, $item);
+            } else if ($item instanceof AuditableInterface) {
                 $this->entityInsertBuffer[] = $item;
             }
         }
