@@ -9,6 +9,7 @@ use Codyas\Audit\Model\MasterAuditableInterface;
 use Codyas\Audit\Model\SlaveAuditableInterface;
 use Codyas\Audit\Service\AuditService;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Events;
@@ -30,9 +31,10 @@ class AuditSubscriber implements EventSubscriberInterface
     private array $enqueuedItems = [];
 
     public function __construct(
-        private readonly AuditService          $auditLogger,
-        private readonly SerializerInterface   $serializer,
-        private readonly ParameterBagInterface $parameterBag,
+        private readonly AuditService           $auditLogger,
+        private readonly SerializerInterface    $serializer,
+        private readonly ParameterBagInterface  $parameterBag,
+        private readonly EntityManagerInterface $em
     )
     {
         $this->config = $this->parameterBag->get('codyas_audit_config');
@@ -50,7 +52,6 @@ class AuditSubscriber implements EventSubscriberInterface
             return;
         }
 
-//        $dispatchMessage = $config['handler'] === 'messenger';
         $dispatchMessage = false;
 
         if ($this->entityInsertBuffer) {
@@ -129,7 +130,6 @@ class AuditSubscriber implements EventSubscriberInterface
         $unitOfWork = $args->getObjectManager()->getUnitOfWork();
         $inserts = $unitOfWork->getScheduledEntityInsertions();
         $updates = $unitOfWork->getScheduledEntityUpdates();
-        $deletions = $unitOfWork->getScheduledEntityDeletions();
         foreach ($inserts as $item) {
             if ($item instanceof AuditableInterface) {
                 $this->entityInsertBuffer[] = $item;
@@ -140,11 +140,6 @@ class AuditSubscriber implements EventSubscriberInterface
                 $this->entityUpdateBuffer[] = $item;
             }
         }
-//        foreach ($deletions as $item) {
-//            if ($item instanceof AuditableInterface) {
-//                $this->entityRemovalBuffer[] = $item;
-//            }
-//        }
     }
 
     public function preRemove(PreRemoveEventArgs $args): void
@@ -153,6 +148,7 @@ class AuditSubscriber implements EventSubscriberInterface
         if ($auditableItem instanceof MasterAuditableInterface) {
             array_unshift($this->entityRemovalBuffer, clone $auditableItem);
         } else if ($auditableItem instanceof AuditableInterface) {
+            $this->em->refresh($auditableItem);
             $this->entityRemovalBuffer[] = $auditableItem;
         }
     }
