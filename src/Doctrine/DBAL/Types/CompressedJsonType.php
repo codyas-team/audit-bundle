@@ -13,7 +13,7 @@ final class CompressedJsonType extends JsonType
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform) : string
     {
         return $platform->getBlobTypeDeclarationSQL($column);
     }
@@ -21,7 +21,7 @@ final class CompressedJsonType extends JsonType
     /**
      * {@inheritdoc}
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform) : mixed
     {
         if (null !== $value) {
             $converted = gzuncompress($value);
@@ -37,7 +37,7 @@ final class CompressedJsonType extends JsonType
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform) : mixed
     {
         if ($value === null) {
             return null;
