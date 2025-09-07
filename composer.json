@@ -17,11 +17,11 @@
   "require": {
     "php": ">=8.1.0",
     "ext-zlib": "*",
-    "symfony/orm-pack": "^1.0 || 2.0",
-    "symfony/framework-bundle": "^5.0 || ^6.0",
+    "symfony/orm-pack": "^1.0 || ^2.0",
+    "symfony/framework-bundle": "^5.0 || ^6.0 || ~7.0",
     "knplabs/knp-paginator-bundle": "^5.0",
     "symfony/flex": "^1.0 || ^2.0",
-    "symfony/serializer": "^5.0 || ^6.0",
+    "symfony/serializer": "^5.0 || ^6.0 || ^7.0",
     "swaggest/json-diff": "^3.10"
   },
   "autoload": {
